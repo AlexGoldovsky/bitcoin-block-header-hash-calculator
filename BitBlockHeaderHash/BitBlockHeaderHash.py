@@ -20,13 +20,13 @@ class BitBlockHeaderHash:
         Can't use pack here due to the size of the number
         '''
         bin_of_hexa = unhexlify(hexa)
-        return hexlify(bin_of_hexa[::-1])
+        return bin_of_hexa[::-1]
 
     def __intToHexLE(self, n):
         '''
         Converts an integer to a 4 byte hexadecimal in little-endian byte order
         '''
-        return hexlify(pack("<I", n))
+        return pack("<I", n)
         # check n.to_bytes(4, byteorder = 'little') for python > 3.2
 
     def get_header_hex(self):
@@ -42,7 +42,7 @@ class BitBlockHeaderHash:
 
     def calculate_hash(self):
         header_hex = self.get_header_hex()
-        header_bin = unhexlify(header_hex)
-        header_hash = sha256(sha256(header_bin).digest()).digest()
+        #header_bin = unhexlify(header_hex)
+        header_hash = sha256(sha256(header_hex).digest()).digest()
         return header_hash[::-1].encode('hex_codec')
 
