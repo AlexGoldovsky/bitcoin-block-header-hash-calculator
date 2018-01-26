@@ -6,7 +6,7 @@ PYTHONPATH=. python Clients/web/index.py
 ```
 or using nginx (also serves static files)
 ```
-gunicorn --workers 50 --bind unix:bbhh.sock -m 000 wsgi
+PYTHONPATH=../../ gunicorn --workers 50 --bind unix:bbhh.sock -m 000 wsgi
 sudo nginx -c /path/to/repo/Clients/web/server.nginx
 ```
 
