@@ -4,6 +4,11 @@
 ```
 PYTHONPATH=. python Clients/web/index.py
 ```
+or using nginx (also serves static files)
+```
+gunicorn --workers 50 --bind unix:bbhh.sock -m 000 wsgi
+sudo nginx -c /path/to/repo/Clients/web/server.nginx
+```
 
 ## Using The API
 All API endpoints are registered under /api
@@ -15,3 +20,15 @@ __note:__ This assumes you're running this up on localhost
 returns `{
   "hash": "00000000000000000be983a81043933c38008010b849fd6a35d5dd2d57f929bd"
 }`
+
+## TODO
+- [ ] Handle Negative flow
+- [ ] Use something sexier than jquery
+- [ ] Add tests
+- [ ] Add Dockerfile
+- [ ] Preety response (Currently using alert)
+- [ ] Add configurations
+- [ ] Add logging
+- [ ] nginx conf use environmet variables
+- [ ] Add api explorer
+  
