@@ -46,3 +46,6 @@ Nonce - 3548193207
 The Hash is 00000000000000000be983a81043933c38008010b849fd6a35d5dd2d57f929bd
 ```
 
+## TODO
+- [ ] Handle negative flow
+- [ ] Add Tests 
