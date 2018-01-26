@@ -7,6 +7,10 @@
 $(function() {
 
 // The DOM is ready!
+
+// initiate modal state
+$('#myModal').modal('hide');
+
 $( "#blockHeaderInfo" ).submit(function( event ) {
 	event.preventDefault();
 
@@ -21,7 +25,8 @@ $( "#blockHeaderInfo" ).submit(function( event ) {
 		data: data,
 		dataType: 'json',
 		success: function( data ) {
-			alert( data.hash );
+			$('.hash-value').text(data.hash)
+			$('#myModal').modal('show')
 		}
 	});
 });

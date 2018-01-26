@@ -26,7 +26,8 @@ returns `{
 - [ ] Use something sexier than jquery
 - [ ] Add tests
 - [ ] Add Dockerfile
-- [ ] Preety response (Currently using alert)
+- [x] Preety response (Currently using alert)
+- [x] Add ability to copy to clipboard result hash
 - [ ] Add configurations
 - [ ] Add logging
 - [ ] nginx conf use environmet variables
