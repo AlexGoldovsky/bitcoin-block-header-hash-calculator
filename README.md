@@ -7,3 +7,4 @@ A python script to calculate bitcoin block header hash
 - [ ] Add Documentation
 - [ ] Add API Explorer (for web client)
 - [x] Add GUI (for web client)
+- [ ] Validate resulting hash

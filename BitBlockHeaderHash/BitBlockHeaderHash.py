@@ -44,9 +44,7 @@ class BitBlockHeaderHash(object):
             int(previous_block_hash, 16)
         except ValueError:
             raise ValueError("Previous Block Hash must be a hexadecimal string")
-        print len(previous_block_hash.encode("utf-8"))
-        print 8*calcsize("P")
-        if not (len(previous_block_hash.encode("utf-8")) == (8*calcsize("P"))):
+        if not (len(unhexlify(previous_block_hash.encode("utf8"))) == 32):
             raise ValueError("Previous Block Hash must be 32 bytes hexadecimal")
         self._pbh = previous_block_hash
 
@@ -64,7 +62,7 @@ class BitBlockHeaderHash(object):
             int(mr, 16)
         except ValueError:
             raise ValueError("Merkle Root must be a hexadecimal string")
-        if not (len(mr.encode("utf-8")) == (8*calcsize("P"))):
+        if not (len(unhexlify(mr.encode("utf8"))) == 32):
             raise ValueError("Merkle Root must be 32 bytes hexadecimal")
         self._merkle_root = mr
 

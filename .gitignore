@@ -3,3 +3,4 @@ venvs
 notes.txt
 *.sock
 .DS_Store
+.cache
