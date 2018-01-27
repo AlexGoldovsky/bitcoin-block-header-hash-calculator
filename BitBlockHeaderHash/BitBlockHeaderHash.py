@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-from struct import pack
+from struct import (pack, calcsize)
 from binascii import (unhexlify, hexlify)
 from hashlib import sha256
 
-class BitBlockHeaderHash:
+class BitBlockHeaderHash(object):
     def __init__(self, version, previous_block_hash, merkle_root, time, bits,
                  nonce):
         self.version = version
@@ -13,6 +13,106 @@ class BitBlockHeaderHash:
         self.time = time
         self.bits = bits
         self.nonce = nonce
+
+
+    '''
+    version - Version
+    '''
+    @property
+    def version(self):
+        return self._version
+
+    @version.setter
+    def version(self, v):
+        if not isinstance(v, int):
+            raise ValueError("Version must be an integer")
+        if not (v > 0):
+            raise ValueError("Version must be positive")
+        self._version = v
+
+
+    '''
+    pbh - Previous Block Hash
+    '''
+    @property
+    def pbh(self):
+        return self._pbh
+
+    @pbh.setter
+    def pbh(self, previous_block_hash):
+        try:
+            int(previous_block_hash, 16)
+        except ValueError:
+            raise ValueError("Previous Block Hash must be a hexadecimal string")
+        print len(previous_block_hash.encode("utf-8"))
+        print 8*calcsize("P")
+        if not (len(previous_block_hash.encode("utf-8")) == (8*calcsize("P"))):
+            raise ValueError("Previous Block Hash must be 32 bytes hexadecimal")
+        self._pbh = previous_block_hash
+
+
+    '''
+    merkle_root - Merkle Root
+    '''
+    @property
+    def merkle_root(self):
+        return self._merkle_root
+
+    @merkle_root.setter
+    def merkle_root(self, mr):
+        try:
+            int(mr, 16)
+        except ValueError:
+            raise ValueError("Merkle Root must be a hexadecimal string")
+        if not (len(mr.encode("utf-8")) == (8*calcsize("P"))):
+            raise ValueError("Merkle Root must be 32 bytes hexadecimal")
+        self._merkle_root = mr
+
+
+    '''
+    time - Unix Timestamp
+    '''
+    @property
+    def time(self):
+        return self._time
+
+    # TODO - validate time in a better way
+    @time.setter
+    def time(self, timestamp):
+        if not isinstance(timestamp, int) or not timestamp > 0:
+            raise ValueError("Timestamp is bad")
+        self._time = timestamp
+
+
+    '''
+    bits - nBits
+    '''
+    @property
+    def bits(self):
+        return self._bits
+
+    @bits.setter
+    def bits(self, b):
+        if not isinstance(b, int):
+            raise ValueError("Bits must be an integer")
+        if not (b > 0):
+            raise ValueError("Bits must be positive")
+        self._bits = b
+
+
+    '''
+    nonce - Nonce
+    '''
+    @property
+    def nonce(self):
+        return self._nonce
+
+    @nonce.setter
+    def nonce(self, n):
+        if not isinstance(n, int):
+            raise ValueError("Nonce must be an integer")
+        self._nonce = n
+
 
     def __hexToLEBin(self, hexstr):
         '''
