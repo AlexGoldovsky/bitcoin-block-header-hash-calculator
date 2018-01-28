@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-from struct import (pack, calcsize)
-from binascii import (unhexlify, hexlify)
+from struct import pack
+from binascii import unhexlify
 from hashlib import sha256
+
 
 class BitBlockHeaderHash(object):
     def __init__(self, version, previous_block_hash, merkle_root, time, bits,
@@ -13,7 +14,6 @@ class BitBlockHeaderHash(object):
         self.time = time
         self.bits = bits
         self.nonce = nonce
-
 
     '''
     version - Version
@@ -30,7 +30,6 @@ class BitBlockHeaderHash(object):
             raise ValueError("Version must be positive")
         self._version = v
 
-
     '''
     pbh - Previous Block Hash
     '''
@@ -43,11 +42,18 @@ class BitBlockHeaderHash(object):
         try:
             int(previous_block_hash, 16)
         except ValueError:
-            raise ValueError("Previous Block Hash must be a hexadecimal string")
-        if not (len(unhexlify(previous_block_hash.encode("utf8"))) == 32):
-            raise ValueError("Previous Block Hash must be 32 bytes hexadecimal")
-        self._pbh = previous_block_hash
+            pbh_type = type(previous_block_hash).__name__
+            raise ValueError("Previous Block Hash must be 32 bytes hexadecimal." +
+                             "Got Type: %s Instead" %pbh_type)
+        try:
+            bytes_count = len(unhexlify(previous_block_hash.encode("utf8")))
+            if not (bytes_count == 32):
+                raise ValueError("Wrong Bytes Count: %d" %bytes_count)
+        except (TypeError, ValueError) as e:
+            raise ValueError("Previous Block Hash must be 32 bytes hexadecimal." +
+                             "Got Error: %s Instead" %str(e))
 
+        self._pbh = previous_block_hash
 
     '''
     merkle_root - Merkle Root
@@ -61,11 +67,17 @@ class BitBlockHeaderHash(object):
         try:
             int(mr, 16)
         except ValueError:
-            raise ValueError("Merkle Root must be a hexadecimal string")
-        if not (len(unhexlify(mr.encode("utf8"))) == 32):
-            raise ValueError("Merkle Root must be 32 bytes hexadecimal")
+            mr_type = type(mr).__name__
+            raise ValueError("Merkle Root must be 32 bytes hexadecimal." +
+                             "Got Type: %s Instead" %mr_type)
+        try:
+            bytes_count = len(unhexlify(mr.encode("utf8")))
+            if not (bytes_count == 32):
+                raise ValueError("Wrong Bytes Count: %d" %bytes_count)
+        except (TypeError, ValueError) as e:
+            raise ValueError("Merkle Root must be 32 bytes hexadecimal." +
+                             "Got Error: %s Instead" %str(e))
         self._merkle_root = mr
-
 
     '''
     time - Unix Timestamp
@@ -80,7 +92,6 @@ class BitBlockHeaderHash(object):
         if not isinstance(timestamp, int) or not timestamp > 0:
             raise ValueError("Timestamp is bad")
         self._time = timestamp
-
 
     '''
     bits - nBits
@@ -97,7 +108,6 @@ class BitBlockHeaderHash(object):
             raise ValueError("Bits must be positive")
         self._bits = b
 
-
     '''
     nonce - Nonce
     '''
@@ -109,28 +119,29 @@ class BitBlockHeaderHash(object):
     def nonce(self, n):
         if not isinstance(n, int):
             raise ValueError("Nonce must be an integer")
+        if not (n > -1):
+            raise ValueError("Nonce must be positive or 0")
         self._nonce = n
 
-
-    def __hexToLEBin(self, hexstr):
-        '''
+    def __hex_to_le_bin(self, hexstr):
+        """
         Converts a hexadecimal string to a binary little-endian byte order
-        '''
+        """
         return unhexlify(hexstr)[::-1]
 
-    def __intToLEBin(self, n):
-        '''
+    def __int_to_le_bin(self, n):
+        """
         Converts an integer to a binary little-endian byte order
-        '''
+        """
         return pack("<I", n)
 
     def get_header_hex(self):
-        version = self.__intToLEBin(self.version)
-        previousblockhash = self.__hexToLEBin(self.pbh)
-        merkleroot = self.__hexToLEBin(self.merkle_root)
-        time = self.__intToLEBin(self.time)
-        bits = self.__intToLEBin(self.bits)
-        nonce = self.__intToLEBin(self.nonce)
+        version = self.__int_to_le_bin(self.version)
+        previousblockhash = self.__hex_to_le_bin(self.pbh)
+        merkleroot = self.__hex_to_le_bin(self.merkle_root)
+        time = self.__int_to_le_bin(self.time)
+        bits = self.__int_to_le_bin(self.bits)
+        nonce = self.__int_to_le_bin(self.nonce)
 
         return "".join([version, previousblockhash, merkleroot, time, bits,
                        nonce])
